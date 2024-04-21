@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "audioguide-tmp"
+name = "audioguide-bot"
 version = "0.1.0"
 description = ""
 authors = ["nikolai-in <nikolai.in@tuta.io>"]
