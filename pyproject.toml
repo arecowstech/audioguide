@@ -2,7 +2,7 @@
 name = "audioguide-bot"
 version = "0.1.0"
 description = ""
-authors = ["nikolai-in <nikolai.in@tuta.io>"]
+authors = ["nikolai-in <nikolai.in@tuta.io>", "Aodhogane <Aodhogane@yandex.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
