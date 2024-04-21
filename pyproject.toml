@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "audioguide-bot"
+version = "0.1.0"
+description = ""
+authors = ["nikolai-in <nikolai.in@tuta.io>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+click = "^8.1.7"
+python-telegram-bot = "^21.1.1"
+pocketbase = {git = "https://github.com/arecowstech/pocketbase.git"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
