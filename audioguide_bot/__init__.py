@@ -21,7 +21,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE, client: PocketBase):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=lambda: client.collection("posts").get_first_list_item(f"num={str(update.message.text)}").body)
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=client.collection("posts").get_first_list_item(f"num={str(update.message.text)}").body)
 
 @click.command()
 @click.version_option()
@@ -46,5 +46,4 @@ def main(token: str, api: str) -> None:
 
 
 if __name__ == "__main__":
-    load_dotenv()
     main()
