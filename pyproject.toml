@@ -10,6 +10,7 @@ python = "^3.12"
 click = "^8.1.7"
 python-telegram-bot = "^21.1.1"
 pocketbase = { git = "https://github.com/arecowstech/pocketbase.git" }
+python-dotenv = "^1.0.1"
 
 [tool.poetry.scripts]
 develop = "audioguide_bot:main"
@@ -21,3 +22,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+reportOptionalMemberAccess = "warning"
