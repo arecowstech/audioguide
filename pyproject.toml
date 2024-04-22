@@ -2,16 +2,26 @@
 name = "audioguide-bot"
 version = "0.1.0"
 description = ""
-authors = ["nikolai-in <nikolai.in@tuta.io>"]
+authors = ["nikolai-in <nikolai.in@tuta.io>", "Aodhogane <Aodhogane@yandex.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
 click = "^8.1.7"
 python-telegram-bot = "^21.1.1"
-pocketbase = {git = "https://github.com/arecowstech/pocketbase.git"}
+pocketbase = { git = "https://github.com/arecowstech/pocketbase.git" }
+python-dotenv = "^1.0.1"
 
+[tool.poetry.scripts]
+develop = "audioguide_bot:main"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+reportOptionalMemberAccess = "warning"
+reportArgumentType = "warning"
+reportAttributeAccessIssue = "warning"
