@@ -12,11 +12,10 @@ WORKDIR /app
 RUN pip install --upgrade pip
 RUN pip install poetry
 COPY ./pyproject.toml /app/pyproject.toml
-RUN poetry config virtualenvs.create false &&
-    poetry install --no-interaction --no-ansi
+COPY . /app/
+RUN poetry install --no-interaction --no-ansi
 
 # Copy project
-COPY . /app/
 
 # Run the application
 CMD ["poetry", "run", "develop"]

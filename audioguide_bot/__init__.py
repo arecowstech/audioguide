@@ -46,10 +46,10 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE, client: Pocke
 @click.command()
 @click.version_option()
 @click.option(
-    "--token", prompt=True, default=lambda: environ.get("TOKEN", "") # Токен из среды или .env
+    "--token", prompt=False, default=lambda: environ.get("TOKEN", "") # Токен из среды или .env
 )
 @click.option(
-    "--api", prompt=True, default=lambda: environ.get("API", "http://127.0.0.1:8090")
+    "--api", prompt=False, default=lambda: environ.get("API", "http://127.0.0.1:8090")
 )
 def main(token: str, api: str) -> None:
     client = PocketBase(api)
