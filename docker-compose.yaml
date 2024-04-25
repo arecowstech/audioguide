@@ -1,3 +1,6 @@
 services:
   bot:
     build: .
+    environment:
+      - API=${API}
+      - TOKEN=${TOKEN}
