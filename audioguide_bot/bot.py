@@ -1,24 +1,48 @@
-import click
+import logging
 from html import escape as html_escape
 from os import environ
-from dotenv import load_dotenv
-import logging
-from telegram import Update, helpers, constants
-from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
-from pocketbase import PocketBase, utils
-from bs4 import BeautifulSoup
 
-supported_tags = ["b", "strong", "i", "em", "u", "ins", "s", "strike", "del", "span", "tg-spoiler", "a", "tg-emoji", "code", "pre", "blockquote"]
+import click
+from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+from pocketbase import PocketBase, utils
+from telegram import Update, constants, helpers
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
+
+supported_tags = [
+    "b",
+    "strong",
+    "i",
+    "em",
+    "u",
+    "ins",
+    "s",
+    "strike",
+    "del",
+    "span",
+    "tg-spoiler",
+    "a",
+    "tg-emoji",
+    "code",
+    "pre",
+    "blockquote",
+]
 
 logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 
 load_dotenv()
 
+
 def remove_unsupported_tags(html, supported_tags):
-    soup = BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, "html.parser")
 
     for tag in soup.find_all(True):
         if tag.name not in supported_tags:
@@ -26,23 +50,36 @@ def remove_unsupported_tags(html, supported_tags):
 
     return str(soup)
 
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!"
+    )
+
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE, client: PocketBase):
     try:
-        message_text = client.collection("posts").get_first_list_item(f"num={str(update.message.text)}").body
+        message_text = (
+            client.collection("posts")
+            .get_first_list_item(f"num={str(update.message.text)}")
+            .body
+        )
         message_text = remove_unsupported_tags(message_text, supported_tags)
     except utils.ClientResponseError:
         message_text = "Похоже, зааписи с таким номером нет. Попробуйте другой номер😅"
-    await context.bot.send_message(chat_id=update.effective_chat.id,
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
         text=message_text,
-        parse_mode=constants.ParseMode.HTML)
+        parse_mode=constants.ParseMode.HTML,
+    )
+
 
 @click.command()
 @click.version_option()
 @click.option(
-    "--token", prompt=False, default=lambda: environ.get("TOKEN", "") # Токен из среды или .env
+    "--token",
+    prompt=False,
+    default=lambda: environ.get("TOKEN", ""),  # Токен из среды или .env
 )
 @click.option(
     "--api", prompt=False, default=lambda: environ.get("API", "http://127.0.0.1:8090")
@@ -52,8 +89,11 @@ def main(token: str, api: str) -> None:
 
     application = ApplicationBuilder().token(token).build()
 
-    start_handler = CommandHandler('start', start)
-    echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), lambda update, context : echo(update, context, client) )
+    start_handler = CommandHandler("start", start)
+    echo_handler = MessageHandler(
+        filters.TEXT & (~filters.COMMAND),
+        lambda update, context: echo(update, context, client),
+    )
 
     application.add_handler(start_handler)
     application.add_handler(echo_handler)
