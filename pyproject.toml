@@ -16,6 +16,10 @@ beautifulsoup4 = "^4.12.3"
 [tool.poetry.scripts]
 develop = "audioguide_bot:main"
 
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.0"
+ruff = "^0.4.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
