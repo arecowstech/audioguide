@@ -11,9 +11,14 @@ click = "^8.1.7"
 python-telegram-bot = "^21.1.1"
 pocketbase = { git = "https://github.com/arecowstech/pocketbase.git" }
 python-dotenv = "^1.0.1"
+beautifulsoup4 = "^4.12.3"
 
 [tool.poetry.scripts]
 develop = "audioguide_bot:main"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.7.0"
+ruff = "^0.4.2"
 
 [build-system]
 requires = ["poetry-core"]
