@@ -1,12 +1,11 @@
 import logging
-from html import escape as html_escape
 from os import environ
 
 import click
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from pocketbase import PocketBase, utils
-from telegram import Update, constants, helpers
+from telegram import Update, constants
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -59,17 +58,52 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE, client: PocketBase):
     try:
-        message_text = (
-            client.collection("posts")
-            .get_first_list_item(f"num={str(update.message.text)}")
-            .body
+        post = client.collection("posts").get_first_list_item(
+            f"num={str(update.message.text)}"
         )
-        message_text = remove_unsupported_tags(message_text, supported_tags)
+
+        post_title = post.title
+        post_body = post.body
+        post_media = post.media
+        media_caption = post.caption
+        post_audio = post.audio
+
+        logging.info(
+            f"{post}\n{post_title}\n{post_body}\n{post_media}\n{media_caption}\n{post_audio}"
+        )
+
+        post_body = remove_unsupported_tags(post_body, supported_tags)
+        media_caption = remove_unsupported_tags(media_caption, supported_tags)
     except utils.ClientResponseError:
-        message_text = "Похоже, зааписи с таким номером нет. Попробуйте другой номер😅"
+        post_body = "Похоже, зааписи с таким номером нет. Попробуйте другой номер😅"
+
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=message_text,
+        text="<b>" + post_title + "</b>",
+        parse_mode=constants.ParseMode.HTML,
+    )
+
+    if post_media:
+        for index, media in enumerate(post_media):
+            photo = client.get_file_url(post, media, {})
+            if index == 0 and media_caption:
+                caption = media_caption
+            else:
+                caption = ""
+            await context.bot.send_photo(
+                chat_id=update.effective_chat.id,
+                photo=photo,
+                caption=caption,
+                parse_mode=constants.ParseMode.HTML,
+            )
+
+    if post_audio:
+        audio = client.get_file_url(post, post_audio, {})
+        await context.bot.send_audio(chat_id=update.effective_chat.id, audio=audio)
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=post_body,
         parse_mode=constants.ParseMode.HTML,
     )
 
