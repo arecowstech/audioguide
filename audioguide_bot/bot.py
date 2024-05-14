@@ -14,6 +14,16 @@ from telegram.ext import (
     filters,
 )
 
+START_MSG = (
+    "Здравствуйте, дорогой гость!\n"
+    + "Этот бот создан студентами РУТ (МИИТ) для помощи посетителям музея. "
+    + "Чтобы самостоятельно ознакомиться с экспозицией, обратите внимание на пронумерованные экспонаты. "
+    + "Просто отправьте сюда номер интересующего вас экспоната и получите в ответ текстовый и аудиофайл с его описанием, "
+    + "а также дополнительные материалы."
+    + "\nКроме того, в описании к боту вы найдёте форму обратной связи, "
+    + "через которую сможете оставить отзыв о работе нашего аудиогида и свои пожелания"
+)
+
 supported_tags = [
     "b",
     "strong",
@@ -51,9 +61,7 @@ def remove_unsupported_tags(html, supported_tags):
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await context.bot.send_message(
-        chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!"
-    )
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=START_MSG)
 
 
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE, client: PocketBase):
