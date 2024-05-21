@@ -69,6 +69,8 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE, client: Pocke
         post = client.collection("posts").get_first_list_item(
             f"num={str(update.message.text)}"
         )
+    except utils.ClientResponseError:
+        post_body = "Похоже, зааписи с таким номером нет. Попробуйте другой номер😅"
 
         post_title = post.title
         post_body = post.body
@@ -82,8 +84,6 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE, client: Pocke
 
         post_body = remove_unsupported_tags(post_body, supported_tags)
         media_caption = remove_unsupported_tags(media_caption, supported_tags)
-    except utils.ClientResponseError:
-        post_body = "Похоже, зааписи с таким номером нет. Попробуйте другой номер😅"
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
